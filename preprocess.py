@@ -91,11 +91,13 @@ def process_audio_folder(folder_path, output_folder):
     return all_features, filenames
 
 # Specify the word folder to process
-word_folder_path = '/Users/simonrisk/Desktop/speech_therapy/words/rabbit'
-spectrogram_output_folder = '/Users/simonrisk/Desktop/speech_therapy/spectrograms/rabbit'
+word_folder_path = '/Users/simonrisk/Desktop/speech_therapy/archive/augmented_dataset/augmented_dataset/tree/'
+spectrogram_output_folder = '/Users/simonrisk/Desktop/speech_therapy/spectrograms/tree'
+csv_output_folder = '/Users/simonrisk/Desktop/speech_therapy/csvs'
 
-# Ensure the output folder exists
+# Ensure the output folders exist
 os.makedirs(spectrogram_output_folder, exist_ok=True)
+os.makedirs(csv_output_folder, exist_ok=True)
 
 # Process the specified word folder
 print(f"Processing word folder: {word_folder_path}")
@@ -103,7 +105,7 @@ all_features, filenames = process_audio_folder(word_folder_path, spectrogram_out
 
 # Write results to a CSV file
 print("Writing results to CSV file...")
-csv_file_path = '/Users/simonrisk/Desktop/speech_therapy/csvs/rabbit.csv'
+csv_file_path = os.path.join(csv_output_folder, 'tree.csv')
 
 # Flattening and creating DataFrame
 flattened_data = []
