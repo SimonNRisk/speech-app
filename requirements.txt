@@ -1,0 +1,8 @@
+librosa
+pandas
+pydub
+numpy
+matplotlib
+tensorflow
+pillow
+scikit-learn
