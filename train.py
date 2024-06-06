@@ -3,6 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import pickle
 from torch.utils.data import DataLoader
 from utils import load_images, split_data
 
@@ -47,11 +48,30 @@ model = CNN()
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
+# Initialize lists to store training and validation metrics
+train_losses = []
+val_losses = []
+train_accuracies = []
+val_accuracies = []
+
+# Check if metrics file exists and load existing data if so
+metrics_file = 'training_metrics.pkl'
+if os.path.exists(metrics_file):
+    with open(metrics_file, 'rb') as f:
+        metrics = pickle.load(f)
+        train_losses = metrics['train_losses']
+        val_losses = metrics['val_losses']
+        train_accuracies = metrics['train_accuracies']
+        val_accuracies = metrics['val_accuracies']
+
 # Training loop
 epochs = 10
 for epoch in range(epochs):
     model.train()
     running_loss = 0.0
+    correct_train = 0
+    total_train = 0
+    
     for i, (inputs, labels) in enumerate(train_loader):
         optimizer.zero_grad()
         outputs = model(inputs)
@@ -59,23 +79,55 @@ for epoch in range(epochs):
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
+        
+        _, predicted = torch.max(outputs.data, 1)
+        total_train += labels.size(0)
+        correct_train += (predicted == labels).sum().item()
+
         if i % 10 == 9:    # Print every 10 batches
             print(f"[{epoch + 1}, {i + 1}] loss: {running_loss / 10:.3f}")
             running_loss = 0.0
 
+    train_accuracy = 100 * correct_train / total_train
+    train_accuracies.append(train_accuracy)
+    
     model.eval()
-    correct = 0
-    total = 0
+    correct_val = 0
+    total_val = 0
+    val_loss = 0.0
+    
     with torch.no_grad():
         for inputs, labels in val_loader:
             outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            val_loss += loss.item()
+            
             _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-    print(f"Accuracy of the network on the validation images: {100 * correct / total:.2f}%")
+            total_val += labels.size(0)
+            correct_val += (predicted == labels).sum().item()
+
+    val_loss /= len(val_loader)
+    val_accuracy = 100 * correct_val / total_val
+    
+    train_losses.append(running_loss)
+    val_losses.append(val_loss)
+    val_accuracies.append(val_accuracy)
+    
+    print(f"Accuracy of the network on the validation images: {val_accuracy:.2f}%")
 
 # Save the model
 torch.save(model.state_dict(), 'spectrogram_classifier.pth')
+
+# Save training metrics to a file
+metrics = {
+    'train_losses': train_losses,
+    'val_losses': val_losses,
+    'train_accuracies': train_accuracies,
+    'val_accuracies': val_accuracies
+}
+
+with open(metrics_file, 'wb') as f:
+    pickle.dump(metrics, f)
 
 # Evaluate the model
 model.eval()
