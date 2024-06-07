@@ -46,21 +46,28 @@ def extract_features(audio_file):
         print(f"Error extracting features from {audio_file}: {e}")
         return None
 
-# Function to create and save a spectrogram
-def create_spectrogram(audio_file, output_folder):
+# Function to create and save a spectrogram with increased Mel bands
+def create_spectrogram(audio_file, output_folder, n_mels=128, n_fft=2048, hop_length=512):
     try:
         y, sr = librosa.load(audio_file, sr=None)
-        S = librosa.feature.melspectrogram(y=y, sr=sr)
+
+        # Apply a band-pass filter to focus on relevant frequencies (300 Hz to 3400 Hz)
+        y = librosa.effects.preemphasis(y)
+        y = librosa.effects.trim(y, top_db=30)[0]
+        S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels, n_fft=n_fft, hop_length=hop_length)
         S_DB = librosa.power_to_db(S, ref=np.max)
 
         plt.figure(figsize=(10, 4))
-        librosa.display.specshow(S_DB, sr=sr, x_axis='time', y_axis='mel')
-        plt.colorbar(format='%+2.0f dB')
-        plt.title(f'Spectrogram of {os.path.basename(audio_file)}')
-        plt.tight_layout()
+        librosa.display.specshow(S_DB, sr=sr, x_axis='time', y_axis='mel', fmax=450)
+        plt.axis('off')
+        plt.gca().set_axis_off()
+        plt.subplots_adjust(top=1, bottom=0, right=1, left=0, hspace=0, wspace=0)
+        plt.margins(0, 0)
+        plt.gca().xaxis.set_major_locator(plt.NullLocator())
+        plt.gca().yaxis.set_major_locator(plt.NullLocator())
 
         output_path = os.path.join(output_folder, f"{os.path.splitext(os.path.basename(audio_file))[0]}_spectrogram.png")
-        plt.savefig(output_path)
+        plt.savefig(output_path, bbox_inches='tight', pad_inches=0)
         plt.close()
         print(f"Spectrogram saved to {output_path}")
 
@@ -68,7 +75,7 @@ def create_spectrogram(audio_file, output_folder):
         print(f"Error creating spectrogram for {audio_file}: {e}")
 
 # Main function to process all audio files in a folder
-def process_audio_folder(folder_path, output_folder):
+def process_audio_folder(folder_path, output_folder, n_mels=128, n_fft=2048, hop_length=512):
     all_features = []
     filenames = []
 
@@ -86,39 +93,51 @@ def process_audio_folder(folder_path, output_folder):
             if features:
                 all_features.append(features)
                 filenames.append(filename)
-                create_spectrogram(file_path, output_folder)
+                create_spectrogram(file_path, output_folder, n_mels, n_fft, hop_length)
     
     return all_features, filenames
 
-# Specify the word folder to process
-word_folder_path = '/Users/simonrisk/Desktop/speech_therapy/archive/augmented_dataset/augmented_dataset/tree/'
-spectrogram_output_folder = '/Users/simonrisk/Desktop/speech_therapy/spectrograms/tree'
-csv_output_folder = '/Users/simonrisk/Desktop/speech_therapy/csvs'
+# Function to process word data
+def process_word_data(word_folder_path, spectrogram_output_folder, csv_output_file):
+    # Ensure the output folders exist
+    os.makedirs(spectrogram_output_folder, exist_ok=True)
+    os.makedirs(os.path.dirname(csv_output_file), exist_ok=True)
 
-# Ensure the output folders exist
-os.makedirs(spectrogram_output_folder, exist_ok=True)
-os.makedirs(csv_output_folder, exist_ok=True)
+    # Process the specified word folder with increased Mel bands
+    print(f"Processing word folder: {word_folder_path}")
+    all_features, filenames = process_audio_folder(word_folder_path, spectrogram_output_folder, n_mels=128, n_fft=2048, hop_length=512)
 
-# Process the specified word folder
-print(f"Processing word folder: {word_folder_path}")
-all_features, filenames = process_audio_folder(word_folder_path, spectrogram_output_folder)
+    # Write results to a CSV file
+    print("Writing results to CSV file...")
 
-# Write results to a CSV file
-print("Writing results to CSV file...")
-csv_file_path = os.path.join(csv_output_folder, 'tree.csv')
+    # Flattening and creating DataFrame
+    flattened_data = []
+    for idx, features in enumerate(all_features):
+        num_frames = features['mfcc'].shape[0]
+        for frame in range(num_frames):
+            frame_data = {key: features[key][frame] for key in features}
+            frame_data['filename'] = filenames[idx]
+            flattened_data.append(frame_data)
 
-# Flattening and creating DataFrame
-flattened_data = []
-for idx, features in enumerate(all_features):
-    num_frames = features['mfcc'].shape[0]
-    for frame in range(num_frames):
-        frame_data = {key: features[key][frame] for key in features}
-        frame_data['filename'] = filenames[idx]
-        flattened_data.append(frame_data)
+    df = pd.DataFrame(flattened_data)
+    df.to_csv(csv_output_file, index=False)
+    print("CSV file generation completed.")
 
-df = pd.DataFrame(flattened_data)
-df.to_csv(csv_file_path, index=False)
-print("CSV file generation completed.")
+    # Indicate completion
+    print("Feature extraction, spectrogram generation, and CSV generation completed.")
 
-# Indicate completion
-print("Feature extraction, spectrogram generation, and CSV generation completed.")
+# Specify paths for "tree"
+tree_word_folder_path = '/Users/simonrisk/Desktop/speech_therapy/archive/augmented_dataset/augmented_dataset/tree/'
+tree_spectrogram_output_folder = '/Users/simonrisk/Desktop/speech_therapy/spectrograms/tree'
+tree_csv_output_file = '/Users/simonrisk/Desktop/speech_therapy/csvs/tree.csv'
+
+# Specify paths for "three"
+three_word_folder_path = '/Users/simonrisk/Desktop/speech_therapy/archive/augmented_dataset/augmented_dataset/three/'
+three_spectrogram_output_folder = '/Users/simonrisk/Desktop/speech_therapy/spectrograms/three'
+three_csv_output_file = '/Users/simonrisk/Desktop/speech_therapy/csvs/three.csv'
+
+# Process "tree" data
+process_word_data(tree_word_folder_path, tree_spectrogram_output_folder, tree_csv_output_file)
+
+# Process "three" data
+process_word_data(three_word_folder_path, three_spectrogram_output_folder, three_csv_output_file)
