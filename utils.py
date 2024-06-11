@@ -29,9 +29,9 @@ def load_images(data_dir, categories):
     
     return torch.stack(images), torch.tensor(labels)
 
-def split_data(X, y, test_size=0.2, random_state=42):
+'''def split_data(X, y, test_size=0.2, random_state=42):
     dataset = TensorDataset(X, y)
     train_size = int((1 - test_size) * len(dataset))
     val_size = len(dataset) - train_size
     train_dataset, val_dataset = random_split(dataset, [train_size, val_size], generator=torch.Generator().manual_seed(random_state))
-    return train_dataset, val_dataset
+    return train_dataset, val_dataset'''
