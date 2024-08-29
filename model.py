@@ -20,6 +20,9 @@ os.makedirs(outputs_directory, exist_ok=True)
 
 print("Running...")
 data = pd.read_csv('all_word_audio_features.csv')
+
+data = data.sample(frac=1, random_state=42).reset_index(drop=True)  # Shuffling
+
 data = data.drop(columns= ['filename','start','end']) #drops from data (removes)
 
 words = ["three", "tree"]
@@ -117,12 +120,13 @@ def train_and_evaluate_model(model, param_grid):
 
 
 rf_param_grid = {
-    'n_estimators': [100, 250, 1000],
-    'max_features': ['sqrt', 'log2'],
-    'max_depth': [None, 10, 20, 30],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4]
+    'n_estimators': [100, 250, 500],  #reduced the upper limit to 500 for faster training and diminishing returns on 1000 trees
+    'max_features': ['sqrt', 'log2'],  #introducing regularization by limiting the number of features.
+    'max_depth': [10, 20, 30],  #removed `None` to avoid very deep trees that overfit the data
+    'min_samples_split': [5, 10, 15],  #increased the min number of samples required to split an internal node to avoid overfitting on small splits
+    'min_samples_leaf': [2, 4, 6]  #increased the min number of samples per leaf to make the trees less sensitive to individual data points
 }
+
 print("param grid set")
 
 rf_model = RandomForestClassifier()
