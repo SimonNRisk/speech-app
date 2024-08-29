@@ -1,8 +1,10 @@
-librosa
 pandas
-pydub
 numpy
 matplotlib
-tensorflow
-pillow
 scikit-learn
+scipy
+soundfile
+joblib
+os-sys
+librosa
+pydub
