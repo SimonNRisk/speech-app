@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project aims to develop a machine learning model using a Random Forest Classifier to differentiate between the words "three" and "tree" based on their pronunciation. The ultimate goal is to create a speech therapy app that helps children with speech disorders practice and improve their pronunciation skills independently, without requiring parental / speech therapist assistance.
+This project aims to develop a machine learning model using ML to differentiate between the correctly and incorrectly pronounced words. The ultimate goal is to create a speech therapy app that helps children with speech disorders practice and improve their pronunciation skills independently, without requiring parental / speech therapist assistance.
 
 ## Project Components
 
