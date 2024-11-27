@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLP Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <!-- Sidebar for student selection -->
+    <div class="sidebar">
+        <div class="student-dropdown-container">
+            <select id="studentDropdown" class="student-dropdown" onchange="selectStudent(this.value)">
+                <option value="">--Select Student--</option>
+                <option value="Tom">Tom</option>
+                <option value="Simon">Simon</option>
+                <option value="Yingel">Yingel</option>
+                <option value="add">+</option>
+            </select>
+            <button id="cancelAddStudent" onclick="cancelAddStudent()" style="display: none;">Cancel</button>
+        </div>
+    
+        <div class="sidebar-content" style="display: none;">
+            <h2 class="studentSettings">Student Data
+                <span class="editIcon" onclick="toggleEdit('studentData')">✏️</span>
+            </h2>
+            <p class="studentSettings">ID: <span id="studentID" class="editableField studentData"></span></p>
+            <p class="studentSettings">Name: <span id="studentName" class="editableField studentData"></span></p>
+            <p class="studentSettings">Date of Birth: <span id="dob" class="editableField studentData"></span></p>
+            <p class="studentSettings">Gender: <span id="gender" class="editableField studentData"></span></p>
+    
+            <h2 class="studentSettings">Parental/Guardian Information
+                <span class="editIcon" onclick="toggleEdit('parentGuardianInfo')">✏️</span>
+            </h2>
+            <p class="studentSettings">Parent/Guardian Contact: <span id="parentContact" class="editableField parentGuardianInfo"></span></p>
+            <p class="studentSettings">Special Requests: <span id="specialRequests" class="editableField parentGuardianInfo"></span></p>
+    
+
+
+            <h2 class="studentSettings">Modify Practice
+                <button id="savePracticeButton" class="save-button inactive" onclick="savePracticeChanges()" disabled>Save</button>
+            </h2>
+
+
+            <div class="select-sound">
+                <label for="sound-options">Select Sound:</label>
+                <div id="sound-options" class="multi-select-menu">
+                  <label>
+                    <input type="checkbox" value="r" data-option="r" />
+                    r
+                  </label>
+                  <label>
+                    <input type="checkbox" value="s" data-option="s" />
+                    s
+                  </label>
+                  <label>
+                    <input type="checkbox" value="th" data-option="th" />
+                    th
+                  </label>
+                  <label>
+                    <input type="checkbox" value="l" data-option="l" />
+                    l
+                  </label>
+                  <label>
+                    <input type="checkbox" value="z" data-option="z" />
+                    z
+                  </label>
+                  <label>
+                    <input type="checkbox" value="sh" data-option="sh" />
+                    sh
+                  </label>
+                </div>
+              </div>
+
+
+              <div id="soundLocationContainer">
+                <label class="slider-title">Select Location Frequency:</label>
+                <div id="soundLocationSlider" class="multi-range-slider"></div>
+                <div id="soundLocationSummary" class="slider-summary">
+                    Beginning: 20%, Middle: 30%, End: 50%
+                </div>
+            </div>
+
+
+            <div id="syllableCountContainer">
+                <label class="slider-title">Select Syllable Count Frequency:</label>
+                <div id="syllableCountSlider" class="multi-range-slider"></div>
+                <div id="syllableCountSummary" class="slider-summary">
+                    1 Syllable: 33%, 2 Syllables: 33%, 3+ Syllables: 34%
+                </div>
+            </div>
+                
+
+                <label>Vowel Combination Distribution:</label>
+                <div id="vowelCombinationSlider" class="multi-slider">
+                    <!-- Dynamically generated sliders for each vowel -->
+                </div>
+                <div id="vowelSummary"></div> 
+
+
+
+
+        </div>
+
+
+
+
+        <button id="deleteButton" onclick="confirmDeleteStudent()" style="display: none;" class="delete-button">Delete</button>
+    
+        <div class="resize-handle" id="resizeHandle"></div>
+    </div>
+    
+
+    <!-- Main content area for statistics -->
+    <main class="content">
+        <h1 id="dashboardTitle">SLP Dashboard</h1>
+
+      <!-- Chart Grid -->
+      <div class="chart-grid">
+
+        <div class="chart-item">
+            <h2>Pronunciation Confidence Level</h2>
+            <canvas id="confidenceChart"></canvas>
+        </div>
+
+        <div class="chart-item">
+            <h2>Accuracy by Letter Combinations</h2>
+            <canvas id="letterCombinationChart"></canvas>
+        </div>
+        
+        <div class="chart-item">
+            <h2>Accuracy by Syllables</h2>
+            <canvas id="syllablesChart"></canvas>
+        </div>
+        
+        <div class="chart-item">
+            <h2>Accuracy by Sound Location</h2>
+            <canvas id="soundLocationChart"></canvas>
+        </div>
+        
+        <div class="chart-item">
+            <h2>Progress by Game Level</h2>
+            <canvas id="gameLevelChart"></canvas>
+        </div>
+
+        <div class="chart-item">
+            <h2>Minutes Practiced</h2>
+            <canvas id="minutesPracticedChart"></canvas>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="/js/sidebar.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/notes.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+</body>
+</html>
+

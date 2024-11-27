@@ -1,0 +1,230 @@
+.sidebar {
+    width: 350px; 
+    transition: width 0.05s ease;
+    position: relative;
+}
+
+
+.sidebar .studentData,
+.sidebar .parentGuardianInfo {
+    word-wrap: break-word;
+    overflow-wrap: break-word; 
+    white-space: pre-wrap; 
+    padding: 5px; 
+    display: inline-block;
+    box-sizing: border-box; 
+    max-width: 100%; 
+}
+
+
+.student-dropdown-container{
+    margin: 0px;
+}
+
+
+h2.studentSettings{
+    font-size: 22px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+.studentSettings + h2.studentSettings {
+    margin-top: 1em; 
+}
+
+p.studentSettings{
+    font-size: 18px;
+    padding-top: 7px;
+}
+
+
+.sidebar .editIcon {
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 5px;
+    color: #fdfdfd !important; 
+    transition: color 0.3s ease;
+}
+
+.editIcon.active {
+    color: lightgray; 
+}
+
+.sidebar .editIcon:hover {
+    color: lightgray; 
+}
+
+.editableField {
+    display: inline-block;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.editableField[contenteditable="true"] {
+    background-color: #f0f8ff;
+    border: 1px dashed #007bff; 
+    outline: none; 
+    cursor: text; 
+    color: black;
+}
+
+.editableField[contenteditable="false"] {
+    background-color: transparent; 
+    border: none; 
+}
+
+
+.save-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    margin-left: 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, 0.3s ease;
+
+}
+
+.save-button:hover {
+    background-color: #218838;
+}
+
+.save-button.inactive {
+    background-color: #cccccc; 
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.save-button.active {
+    background-color: #4CAF50; 
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.select-sound {
+    margin-top: 16px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .multi-select-menu {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .multi-select-menu label {
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  
+  .multi-select-menu input[type="checkbox"] {
+    margin-right: 8px;
+  }
+
+
+
+
+  .slider-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.slider-summary {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px; 
+    margin-bottom: 20px;
+}
+.range-label {
+    display: none; 
+}
+
+#soundLocationContainer {
+    margin-bottom: 20px; 
+}
+
+
+  .multi-range-slider {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 60px;
+    margin: 20px auto;
+}
+
+.range-track {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+    z-index: 0;
+}
+
+.range-highlight {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 8px;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.range-handle {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.range-label {
+    display: none; 
+}
+
+.delete-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 0, 0, 0.897);
+    color: white;
+}
+
+
+.resize-handle {
+    width: 5px;
+    background-color: #ccc;
+    cursor: ew-resize;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.content {
+    flex-grow: 1;
+    transition: width 0.1s ease;
+}
