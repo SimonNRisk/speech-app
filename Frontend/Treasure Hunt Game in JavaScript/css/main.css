@@ -1,5 +1,14 @@
+.rock-salt-regular {
+	font-family: "Rock Salt", serif;
+	font-weight: 400;
+	font-style: normal;
+	text-align: center;
+	color: #ac9270;
+  }
+
 body{
-	background: black !important;
+	background: rgb(126, 196, 250) !important;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif !important;
 }
 
 .navbar{
@@ -11,6 +20,7 @@ body{
 .main{
 	padding: 30px 0;
 	position: relative;
+
 }
 
 .game-button{
@@ -18,8 +28,10 @@ body{
 	height: 75px;
 	padding: 0;
 	margin: 0 1px;
-	cursor: pointer;
-	background: rgba(255,255,255,0.5);
+	cursor: url('../shovel.png'), pointer;
+	background: rgba(255, 255, 255, 0.204);
+	background-size: cover; 
+    background-position: center; 
 	border: 0;
 }
 
@@ -28,8 +40,15 @@ body{
 	transition-duration: 0.5s;
 }
 
-.game-button:disabled{
+.game-button.dug{
 	cursor: not-allowed;
+	background-image: url('../dug.png'); 
+    background-size: cover; 
+	background-position: center; 
+}
+
+.game-button:disabled{
+	cursor: not-allowed; 
 }
 
 .clear{
@@ -41,7 +60,7 @@ body{
 	border-radius: 2px;
 	padding: 30px;
 	width: 500px;
-	background: rgba(255,255,255,0.4);
+	background: rgb(195, 236, 178);
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -51,7 +70,7 @@ body{
 	display: inline-block;
 	/*right: 30px;*/
 	padding: 20px;
-	background: rgba(255,255,255,0.5);
+	background: #f6d7b0;
 }
 
 #health[value]{
@@ -76,29 +95,33 @@ body{
 
 .icon{
 	padding: 0 10px;
+	height: 25px;
 }
 
 #score-div{
-	position: relative;
-    width: 100%;
+	display: flex;
+    align-items: center; 
+    justify-content: center; 
+    text-align: center; 
+    gap: 5px; 
 }
 
-
-
 #demo3{
-	position: absolute;
-    top: 0;
-    left: 55px;
-    width: 100%;
-    font-weight: 600;
+	font-size: 20px; 
+    margin: 0;
+	font-weight: 600;
 }
 
 #demo4{
 	font-weight: 600;
+	height: 35px;
+    overflow: hidden; 
+    text-align: center; 
+    line-height: 40px; 
 }
 
 #start-button{
-	background: #107DA0;	
+	background: rgb(195, 236, 178);	
 	color: white;
 	border: 0;
 	padding: 5px 15px;
@@ -107,7 +130,7 @@ body{
 }
 
 #start-button:hover{
-	background: #30BEED;
+	background: rgb(150, 208, 125);
 }
 
 #gameover{

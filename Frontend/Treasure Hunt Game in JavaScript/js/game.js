@@ -10,16 +10,10 @@ function initialise(){
 		//assign first treasure to map
 		//score reset to 0
 
-		var score = 0;
-		var lives = 10;
+		var score = 2000;
 
-		//when timer reaches 0
-		//display game over message
 		var startBtn = document.getElementById("start-button");
 		startBtn.style.display = "none";
-
-		let health = document.getElementById("health");
-		health.value = 10;
 
 		document.getElementById("demo3").innerHTML = score;
 		document.getElementById("demo4").innerHTML = "";
@@ -121,14 +115,14 @@ function initialise(){
 		assignTreasure();
 
 		function checkLives(){
-			lives = lives - 1;
+			score = score - 250;
 
-			if(lives == 0){
+			if(score <= 0){
 
 					document.getElementById("gameover").innerHTML = "GAME OVER";
 					document.getElementById("gameover").style.color = "red";
 					document.getElementById("demo3").innerHTML = score;
-					health.value -= 1;
+					//health.value -= 1;
 					var elems = document.getElementsByClassName("game-button");
 					for(var i = 0; i < elems.length; i++) {
 					    elems[i].disabled = true;
@@ -136,7 +130,8 @@ function initialise(){
 					startBtn.style.display = "block";
 				}
 				else{
-					health.value -= 1;
+					//health.value -= 1;
+					document.getElementById("demo3").innerHTML = score;
 				} 
 		}
 
@@ -144,6 +139,11 @@ function initialise(){
 			//if coordinates of this button equals cocordinates of current treasure
 			//then increase player's score
 			//update score and or how close to treasure
+
+			//if dug, allow no other interaction
+			if(this.classList.contains("dug")){
+				return;
+			}
 
 			//if clicked button is hiding the treasure 
 			if(this.id == map[x][y]){
@@ -187,26 +187,39 @@ function initialise(){
   						this.id == bottommid ||
   						this.id == bottomright )
   					{
-  						document.getElementById("demo4").innerHTML = "You are warm.";
+  						document.getElementById("demo4").innerHTML = "Getting warm...";
   						document.getElementById("demo4").style.color = "orange"
-						this.style.backgroundColor = "yellow";
-						this.disabled = true;
+						this.setAttribute("data-proximity", 'warm');
+						this.classList.add("dug");
 						checkLives();
   					}
   					//otherwise tell player they are far away
   					else{
-						document.getElementById("demo4").innerHTML = "Cold.. Keep trying.";
+						document.getElementById("demo4").innerHTML = "Cold... Keep trying.";
 						document.getElementById("demo4").style.color = "red";
-						this.style.backgroundColor = "red";
-						this.disabled = true;
+						this.setAttribute("data-proximity", 'cold');
+						this.classList.add("dug");						
 						checkLives();
 					}
   			} 
 
   				
 		}
-				
-
+		
+		//see hints for dug squares when mouse over
+		document.addEventListener("mouseover", function (e) {
+			if (e.target.classList.contains("dug")&& score >0) {
+				const proximity = e.target.getAttribute("data-proximity");
+				document.getElementById("demo4").innerHTML = proximity === "warm" ? "Getting warm..." : "Cold... Keep trying.";
+				document.getElementById("demo4").style.color = proximity === "warm" ? "orange" : "red";
+			}
+		});
+		
+		document.addEventListener("mouseout", function (e) {
+			if (e.target.classList.contains("dug") && score >0) {
+				document.getElementById("demo4").innerHTML = ""; 
+			}
+		});
 				
 				
 				
