@@ -4,11 +4,11 @@ function initialise(){
 	
 
 	function Game(){
-
-		//start timer
 		//generate map
 		//assign first treasure to map
 		//score reset to 0
+		const digPopup = document.getElementById("dig-popup");
+    	digPopup.classList.add("hidden");
 
 		var score = 2000;
 
@@ -145,63 +145,104 @@ function initialise(){
 				return;
 			}
 
-			//if clicked button is hiding the treasure 
-			if(this.id == map[x][y]){
-				score = score + 1000;
-				document.getElementById("demo3").innerHTML = score;
-				document.getElementById("demo4").innerHTML = "Success! Found some gold!";
-				document.getElementById("demo4").style.color = "green"
-				//assign another treasure to different location
-				document.getElementById("game").remove();
-				assignTreasure();
-				checkLives();
-			}
-			//else if clicked button is close to treasure
-			else
-			{ 
-					var a = map.length;
-					//var b = map[a].length;
+			const digPopup = document.getElementById("dig-popup");
+    		const micButton = document.getElementById("mic-button");
+			const continueButton = document.getElementById("continue-button");
+			const popupText = document.getElementById("popup-text");
+    		const targetSquare = this; // Save the clicked square
+			
+			popupText.textContent = "Pronounce the following word to continue your quest for gold!";
+			micButton.classList.remove("hidden");
+   		 	continueButton.classList.add("hidden");
+			digPopup.classList.remove("hidden");
 
-					//control variables incase they go out of range of array
-					var xplus = x + 1; if(xplus == a){ xplus = a - 1;}
-					var xminus = x - 1; if(xminus == -1){ xminus = 0;}
-					var yplus = y + 1; if(yplus == a){ yplus = a - 1;}
-					var yminus = y - 1; if(yminus == -1){ yminus = 0;}
-					
-					//specify how close the clicked button is to the treasure  
-  					var topleft = map[xminus][yminus];
-					var topmid = map[xminus][y];
-					var topright = map[xminus][yplus];
-					var midleft = map[x][yminus];
-					var midright = map[x][yplus];
-					var bottomleft = map[xplus][yminus];
-					var bottommid = map[xplus][y];
-					var bottomright = map[xplus][yplus];
+			micButton.onclick = function () {
+				const randomNumber = Math.floor(Math.random() * 2) + 1; // Generate random number 1 or 2
 
-  					if(this.id == topleft || 
-  						this.id == topmid ||
-  						this.id == topright ||
-  						this.id == midleft ||
-  						this.id == midright ||
-  						this.id == bottomleft ||
-  						this.id == bottommid ||
-  						this.id == bottomright )
-  					{
-  						document.getElementById("demo4").innerHTML = "Getting warm...";
-  						document.getElementById("demo4").style.color = "orange"
-						this.setAttribute("data-proximity", 'warm');
-						this.classList.add("dug");
-						checkLives();
-  					}
-  					//otherwise tell player they are far away
-  					else{
-						document.getElementById("demo4").innerHTML = "Cold... Keep trying.";
-						document.getElementById("demo4").style.color = "red";
-						this.setAttribute("data-proximity", 'cold');
-						this.classList.add("dug");						
-						checkLives();
+				if (randomNumber === 1) {
+					// Correct case
+					popupText.textContent = "Correct!";
+					micButton.classList.add("hidden"); // Hide the mic button
+					continueButton.textContent = "Dig!";
+					continueButton.classList.remove("hidden"); // Show the continue button
+				} else {
+					// Try Again case
+					popupText.textContent = "Not quite! Try again...";
+					micButton.classList.add("hidden"); // Hide the mic button
+					continueButton.textContent = "Try Again"; // Change button text
+					continueButton.classList.remove("hidden"); // Show the continue button
+				}
+
+				// Continue button functionality based on the result
+				continueButton.onclick = function () {
+					if (randomNumber === 1) {
+						digPopup.classList.add("hidden"); // Hide popup for "Correct"
+					} else {
+						// Reset to initial state for "Try Again"
+						popupText.textContent = "Pronounce the following word to continue your quest for gold!";
+						micButton.classList.remove("hidden"); // Show mic button
+						continueButton.classList.add("hidden"); // Hide continue button
 					}
-  			} 
+				};
+
+				//if clicked button is hiding the treasure 
+				if(targetSquare.id == map[x][y] && randomNumber == 1){
+					score = score + 1000;
+					document.getElementById("demo3").innerHTML = score;
+					document.getElementById("demo4").innerHTML = "Success! Found some gold!";
+					document.getElementById("demo4").style.color = "green"
+					//assign another treasure to different location
+					document.getElementById("game").remove();
+					assignTreasure();
+					checkLives();
+				}
+				//else if clicked button is close to treasure
+				else if(randomNumber == 1)
+				{ 
+						var a = map.length;
+						//var b = map[a].length;
+
+						//control variables incase they go out of range of array
+						var xplus = x + 1; if(xplus == a){ xplus = a - 1;}
+						var xminus = x - 1; if(xminus == -1){ xminus = 0;}
+						var yplus = y + 1; if(yplus == a){ yplus = a - 1;}
+						var yminus = y - 1; if(yminus == -1){ yminus = 0;}
+						
+						//specify how close the clicked button is to the treasure  
+						var topleft = map[xminus][yminus];
+						var topmid = map[xminus][y];
+						var topright = map[xminus][yplus];
+						var midleft = map[x][yminus];
+						var midright = map[x][yplus];
+						var bottomleft = map[xplus][yminus];
+						var bottommid = map[xplus][y];
+						var bottomright = map[xplus][yplus];
+
+						if(targetSquare.id == topleft || 
+							targetSquare.id == topmid ||
+							targetSquare.id == topright ||
+							targetSquare.id == midleft ||
+							targetSquare.id == midright ||
+							targetSquare.id == bottomleft ||
+							targetSquare.id == bottommid ||
+							targetSquare.id == bottomright )
+						{
+							document.getElementById("demo4").innerHTML = "Getting warm...";
+							document.getElementById("demo4").style.color = "orange"
+							targetSquare.setAttribute("data-proximity", 'warm');
+							targetSquare.classList.add("dug");
+							checkLives();
+						}
+						//otherwise tell player they are far away
+						else{
+							document.getElementById("demo4").innerHTML = "Cold... Keep trying.";
+							document.getElementById("demo4").style.color = "red";
+							targetSquare.setAttribute("data-proximity", 'cold');
+							targetSquare.classList.add("dug");						
+							checkLives();
+						}
+					}
+  			}; 
 
   				
 		}

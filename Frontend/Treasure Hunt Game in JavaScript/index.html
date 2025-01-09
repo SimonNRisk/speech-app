@@ -31,16 +31,33 @@
 			</ul>
 			<button id="start-button" class="btn-block" onclick="initialise()">Start Game</button>
 		</div>
-				
 		
 	</div>
+	
 	
 </div>
 
 </div>
+
+<div id="dig-popup" class="hidden">
+	<div id="dig-popup-content">
+		<h2><strong>Before your next expedition...</strong></h2>
+		<p id="popup-text">Pronounce the following word to continue your quest for gold!</p>
+
+		<p><strong>Three</strong></p>
+		<button id="mic-button">
+            <img src="../Treasure Hunt Game in JavaScript/mic_icon.png" alt="Mic" style="height: 20px;">
+        </button>
+		<button id="continue-button" class="hidden">Dig!</button>
+
+	</div>
+</div>
+
 </body>
+
 <script src="js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="js/game.js"></script>
+
 
 </html>
